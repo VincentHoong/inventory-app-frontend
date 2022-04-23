@@ -138,22 +138,22 @@ const Inventory: FC = () => {
                         }
                     }}
                 >
-                    <IconButton aria-label="edit"
-                        sx={{
-                            color: "white"
-                        }}
-                        onClick={() => {
-                            navigate("/stock/" + stock.id)
-                        }}
-                    >
-                        <MonetizationOnIcon />
-                    </IconButton>
                     <IconButton aria-label="sell"
                         sx={{
                             color: "white"
                         }}
                         onClick={() => {
                             sellStock(stock.id)
+                        }}
+                    >
+                        <MonetizationOnIcon />
+                    </IconButton>
+                    <IconButton aria-label="edit"
+                        sx={{
+                            color: "white"
+                        }}
+                        onClick={() => {
+                            navigate("/stock/" + stock.id)
                         }}
                     >
                         <EditIcon />
