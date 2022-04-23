@@ -1,6 +1,7 @@
 {
-  "name": "inventory-app",
+  "name": "inventory-app-frontend",
   "version": "0.1.0",
+  "description": "This is a small project to build frontend for inventory management",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.9.0",
@@ -17,6 +18,7 @@
     "chart.js": "^3.7.1",
     "dayjs": "^1.11.1",
     "lodash": "^4.17.21",
+    "notistack": "^2.0.4",
     "react": "^18.0.0",
     "react-chartjs-2": "^4.1.0",
     "react-dom": "^18.0.0",

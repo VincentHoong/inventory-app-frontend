@@ -1,8 +1,13 @@
 import { Menu as MenuIcon } from "@mui/icons-material";
 import { AppBar, IconButton, Toolbar, Typography } from "@mui/material";
-import { FC } from "react";
+import { FC, MouseEventHandler } from "react";
 
-const CustomAppBar: FC = () => {
+export interface CustomAppBarProps {
+    onMenuClick: MouseEventHandler<HTMLButtonElement>;
+}
+
+const CustomAppBar: FC<CustomAppBarProps> = ({ onMenuClick }) => {
+
     return (
         <AppBar
             position="fixed"
@@ -14,16 +19,15 @@ const CustomAppBar: FC = () => {
             <Toolbar>
                 <IconButton
                     size="large"
-                    edge="start"
                     aria-label="menu"
                     sx={{
                         mr: 2,
                         color: "white",
                     }}
+                    onClick={onMenuClick}
                 >
                     <MenuIcon
                         sx={{
-                            mr: 2,
                             color: "white",
                         }} />
                 </IconButton>

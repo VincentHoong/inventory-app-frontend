@@ -1,6 +1,18 @@
-# Getting Started with Create React App
+### Prerequisites
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+1. ```NodeJs```
+2. ```NPM```
+
+### Quick start
+
+1. Clone the repository with `git clone https://github.com/VincentHoong/inventory-app-frontend.git <your_project_folder_name>`
+2. Change directory to your project folder `cd <your_project_folder_name>`
+3. Install the dependencies with `npm install`
+4. Make sure [https://github.com/VincentHoong/inventory-app-backend.git](Inventory Backend App) is running.
+4. Rename `.env.example` to `.env`
+5. Update the your API URL (eg: `http://localhost:3001`) in the `.env` file.
+7. Run the application with `npm start`.
+8. Access `http://localhost:3000` and you're ready to go!
 
 ## Available Scripts
 

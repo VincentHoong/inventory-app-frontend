@@ -7,10 +7,12 @@ import {
 } from "@mui/icons-material";
 import { useNavigate } from "react-router";
 import StockProps from "../../models/StockProps";
+import { useSnackbar } from "notistack";
 
 const Inventory: FC = () => {
     const theme = useTheme();
     const navigate = useNavigate();
+    const { enqueueSnackbar } = useSnackbar();
     const [stocks, setStocks] = useState<StockProps[]>([]);
     const rowGridSxProps: SxProps = {
         p: 2,
@@ -26,8 +28,10 @@ const Inventory: FC = () => {
             const stocks = await result.json();
 
             setStocks(stocks);
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            enqueueSnackbar(error?.data?.message || error?.message || error || "Please make sure the network is correct", {
+                variant: "error",
+            });
         }
     }
 
@@ -43,8 +47,10 @@ const Inventory: FC = () => {
             })
 
             setStocks(_stocks);
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            enqueueSnackbar(error?.data?.message || error?.message || error || "Please make sure the network is correct", {
+                variant: "error",
+            });
         }
     }
 
@@ -70,11 +76,14 @@ const Inventory: FC = () => {
                     {stock.name}
                 </Grid>
                 <Grid item xs={1}>
-                    {parseFloat(stock.price).toFixed(2)}
+                    {parseFloat(stock.price).toLocaleString()}
                 </Grid>
-                <Grid item xs={2}
+                <Grid item xs={12} md={2}
                     sx={{
-                        textAlign: "right"
+                        textAlign: "right",
+                        [theme.breakpoints.down("md")]: {
+                            mt: 2,
+                        }
                     }}
                 >
                     <IconButton aria-label="edit"

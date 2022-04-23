@@ -1,22 +1,27 @@
-import { FC } from "react";
+import { FC, SetStateAction } from "react";
 import {
     Dashboard as DashboardIcon,
     Inventory as InventoryIcon,
     Analytics as AnalyticsIcon,
 } from "@mui/icons-material";
-import { Avatar, Drawer, List, ListItemButton, ListItemIcon, ListItemText, useTheme } from "@mui/material";
+import { Avatar, Drawer, List, ListItemButton, ListItemIcon, ListItemText, useMediaQuery, useTheme } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const drawerWidth = 240;
 
-const CustomDrawer: FC = () => {
+export interface CustomDrawerProps {
+    drawerState: boolean;
+    onMenuClose: (event: {}, reason: "backdropClick" | "escapeKeyDown") => void;
+}
+
+const CustomDrawer: FC<CustomDrawerProps> = ({ drawerState, onMenuClose }) => {
     const theme = useTheme();
+    const isMobileView = useMediaQuery(theme.breakpoints.down("md"));
     const { pathname } = useLocation();
     const navigate = useNavigate();
     const routes = [
         { icon: DashboardIcon, text: "Dashboard", path: "/" },
         { icon: InventoryIcon, text: "Inventory", path: "/inventory" },
-        { icon: AnalyticsIcon, text: "Analytics", path: "/analytics" },
     ];
 
 
@@ -32,7 +37,9 @@ const CustomDrawer: FC = () => {
                     color: "white",
                 },
             }}
-            variant="permanent"
+            open={drawerState}
+            onClose={onMenuClose}
+            variant={isMobileView ? "temporary" : "permanent"}
         >
             <Avatar
                 sx={{

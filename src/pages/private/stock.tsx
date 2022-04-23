@@ -3,14 +3,17 @@ import {
     Delete as DeleteIcon,
     Save as SaveIcon,
     MonetizationOn as MonetizationOnIcon,
+    ArrowBack as ArrowBackIcon,
 } from "@mui/icons-material";
 import { FC, useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import StockProps from "../../models/StockProps";
+import { useSnackbar } from "notistack";
 
 const Stock: FC = () => {
     const { id } = useParams();
     const theme = useTheme();
+    const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate();
     const [stock, setStock] = useState<StockProps>({
         id: undefined,
@@ -38,8 +41,10 @@ const Stock: FC = () => {
             navigate("/stock/" + _stock.id, {
                 replace: true
             });
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            enqueueSnackbar(error?.data?.message || error?.message || error || "Please make sure the network is correct", {
+                variant: "error",
+            });
         }
     }
 
@@ -50,8 +55,10 @@ const Stock: FC = () => {
             });
 
             navigate(-1);
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            enqueueSnackbar(error?.data?.message || error?.message || error || "Please make sure the network is correct", {
+                variant: "error",
+            });
         }
     }
 
@@ -62,8 +69,10 @@ const Stock: FC = () => {
                 const stock = await stocksResult.json();
 
                 setStock(stock);
-            } catch (error) {
-                console.log(error);
+            } catch (error: any) {
+                enqueueSnackbar(error?.data?.message || error?.message || error || "Please make sure the network is correct", {
+                    variant: "error",
+                });
             }
         }
     }
@@ -78,8 +87,10 @@ const Stock: FC = () => {
                 },
                 body: JSON.stringify(stock)
             });
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            enqueueSnackbar(error?.data?.message || error?.message || error || "Please make sure the network is correct", {
+                variant: "error",
+            });
         }
     }
 
@@ -98,8 +109,10 @@ const Stock: FC = () => {
             });
 
             getStock();
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            enqueueSnackbar(error?.data?.message || error?.message || error || "Please make sure the network is correct", {
+                variant: "error",
+            });
         }
     }
 
@@ -114,6 +127,17 @@ const Stock: FC = () => {
                 mx: "auto",
             }}
         >
+            <Button
+                startIcon={<ArrowBackIcon />}
+                sx={{
+                    mb: 3
+                }}
+                onClick={() => {
+                    navigate(-1);
+                }}>
+                Back
+            </Button>
+
             <TextField
                 label="SKU"
                 variant="outlined"

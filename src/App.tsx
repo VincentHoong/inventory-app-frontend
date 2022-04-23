@@ -1,6 +1,6 @@
 import './App.css';
 import { HashRouter, Route, Routes } from 'react-router-dom';
-import Public from './pages/public';
+// import Public from './pages/public';
 import Private from './pages/private';
 
 function App() {
