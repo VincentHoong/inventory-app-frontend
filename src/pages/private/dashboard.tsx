@@ -2,6 +2,7 @@ import { Card, CardContent, Grid, Typography, useTheme } from "@mui/material";
 import { FC, useEffect, useState } from "react";
 import { StockSummaryProps } from "../../models/StockProps";
 import Analytics from "./analytics";
+import _ from "lodash";
 
 const Dashboard: FC = () => {
     const theme = useTheme();
@@ -11,11 +12,21 @@ const Dashboard: FC = () => {
         "SOLD": "Total Sales",
         "INACTIVE": "Total Void"
     }
+    const EMPTY_STOCK_SUMMARIES = [
+        { status: "ACTIVE", totalPrice: "0", totalCount: 0 },
+        { status: "SOLD", totalPrice: "0", totalCount: 0 },
+        { status: "INACTIVE", totalPrice: "0", totalCount: 0 }
+    ]
 
     const getStockSummary = async () => {
         const stockSummaryResult = await fetch(process.env.REACT_APP_API_URL + "/stocks/summary");
         const stockSummaries: StockSummaryProps[] = await stockSummaryResult.json();
-        setStockSummaries(stockSummaries);
+        setStockSummaries(_.uniqBy([
+            ...stockSummaries,
+            ...EMPTY_STOCK_SUMMARIES,
+        ], (stockSummary) => {
+            return stockSummary.status;
+        }));
     }
 
     useEffect(() => {
@@ -24,9 +35,6 @@ const Dashboard: FC = () => {
 
     return (
         <Grid container spacing={2}>
-            <Grid item xs={12}>
-                Dashboard
-            </Grid>
             {
                 stockSummaries && (
                     stockSummaries.map((stockSummary, stockSummaryKey) => {

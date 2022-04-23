@@ -42,7 +42,7 @@ const Index: FC = () => {
                         mb: 3,
                     }}
                 >
-                    {_.startCase(pathname.substring(1))}
+                    {_.startCase(pathname.substring(1)) || "Dashboard"}
                 </Typography>
                 <Routes>
                     <Route path="/" element={<Dashboard />} />

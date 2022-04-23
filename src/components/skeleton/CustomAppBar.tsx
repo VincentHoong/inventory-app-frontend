@@ -1,12 +1,15 @@
 import { Menu as MenuIcon } from "@mui/icons-material";
 import { AppBar, IconButton, Toolbar, Typography } from "@mui/material";
 import { FC, MouseEventHandler } from "react";
+import { useLocation } from "react-router-dom";
+import _ from "lodash";
 
 export interface CustomAppBarProps {
     onMenuClick: MouseEventHandler<HTMLButtonElement>;
 }
 
 const CustomAppBar: FC<CustomAppBarProps> = ({ onMenuClick }) => {
+    const { pathname } = useLocation();
 
     return (
         <AppBar
@@ -32,7 +35,8 @@ const CustomAppBar: FC<CustomAppBarProps> = ({ onMenuClick }) => {
                         }} />
                 </IconButton>
                 <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                    News
+
+                    {_.startCase(pathname.substring(1)) || "Dashboard"}
                 </Typography>
             </Toolbar>
         </AppBar>

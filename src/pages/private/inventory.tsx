@@ -6,6 +6,7 @@ import {
     IconButton,
     InputLabel,
     MenuItem,
+    Pagination,
     Select,
     SxProps,
     Typography,
@@ -21,6 +22,7 @@ import { useNavigate } from "react-router";
 import StockProps, { StatusProps } from "../../models/StockProps";
 import { useSnackbar } from "notistack";
 import _ from "lodash";
+import PageInfoProps from "../../models/PageProps";
 
 const Inventory: FC = () => {
     const theme = useTheme();
@@ -28,6 +30,11 @@ const Inventory: FC = () => {
     const { enqueueSnackbar } = useSnackbar();
     const [stocks, setStocks] = useState<StockProps[]>([]);
     const [status, setStatus] = useState<StatusProps | "">("ACTIVE");
+    const [pageInfo, setPageInfo] = useState<PageInfoProps>({
+        pageNumber: 1,
+        pageSize: 2,
+        totalPages: 0,
+    });
     const rowGridSxProps: SxProps = {
         p: 2,
         my: 1,
@@ -39,10 +46,13 @@ const Inventory: FC = () => {
     const getStocks = async () => {
         try {
             const result = await fetch(process.env.REACT_APP_API_URL + "/stocks?" +
+                "_pageNumber=" + pageInfo.pageNumber + "&" +
+                "_pageSize=" + pageInfo.pageSize + "&" +
                 (status === "" ? "" : "status=" + status));
             const stocks = await result.json();
 
-            setStocks(stocks);
+            setPageInfo(stocks.pageInfo);
+            setStocks(stocks.data);
         } catch (error: any) {
             enqueueSnackbar(error?.data?.message || error?.message || error || "Please make sure the network is correct", {
                 variant: "error",
@@ -55,7 +65,6 @@ const Inventory: FC = () => {
             const result = await fetch(process.env.REACT_APP_API_URL + "/stocks/" + id, {
                 method: "DELETE",
             });
-            console.log(await result.json())
 
             const _stocks = stocks.filter((stock) => {
                 return stock.id !== id;
@@ -92,7 +101,7 @@ const Inventory: FC = () => {
 
     useEffect(() => {
         getStocks();
-    }, [status]);
+    }, [status, pageInfo.pageNumber]);
 
     const renderStockRow = (stock: any, stockKey: number) => {
         let statusColor = undefined;
@@ -173,8 +182,29 @@ const Inventory: FC = () => {
         )
     }
 
+    const renderPagination = () => {
+        return (
+            pageInfo?.totalPages &&
+            <Pagination
+                count={pageInfo.totalPages}
+                color="primary"
+                sx={{
+                    my: 3,
+                }}
+                page={pageInfo.pageNumber}
+                onChange={(event, pageNumber) => {
+                    setPageInfo((prevState) => ({
+                        ...prevState,
+                        pageNumber: pageNumber,
+                    }));
+                }}
+            />
+        )
+    }
+
     return (
         <Box>
+            {renderPagination()}
             <InputLabel id="status"
                 sx={{
                     mb: 1,
@@ -225,6 +255,7 @@ const Inventory: FC = () => {
                     Add Inventory
                 </Button>
             </Box>
+            {renderPagination()}
         </Box>
     )
 }
