@@ -205,6 +205,7 @@ const Stock: FC = () => {
                     <>
                         <Button
                             variant="contained"
+                            aria-label="delete"
                             startIcon={<DeleteIcon />}
                             sx={{
                                 mr: 2,
@@ -217,6 +218,7 @@ const Stock: FC = () => {
                         </Button>
                         <Button
                             variant="contained"
+                            aria-label="sell"
                             startIcon={<MonetizationOnIcon />}
                             sx={{
                                 mr: 2,
@@ -225,12 +227,13 @@ const Stock: FC = () => {
                             onClick={() => {
                                 sellStock();
                             }}>
-                            Sold
+                            Sell
                         </Button>
                     </>
                 )}
                 <Button
                     variant="contained"
+                    aria-label="save"
                     startIcon={<SaveIcon />}
                     onClick={() => {
                         if (id) {

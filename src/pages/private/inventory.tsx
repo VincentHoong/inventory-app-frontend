@@ -1,19 +1,33 @@
 import { FC, useEffect, useState } from "react";
-import { Box, Button, Grid, IconButton, SxProps, useTheme } from "@mui/material";
+import {
+    Box,
+    Button,
+    Grid,
+    IconButton,
+    InputLabel,
+    MenuItem,
+    Select,
+    SxProps,
+    Typography,
+    useTheme
+} from "@mui/material";
 import {
     Add as AddIcon,
     Delete as DeleteIcon,
     Edit as EditIcon,
+    MonetizationOn as MonetizationOnIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router";
-import StockProps from "../../models/StockProps";
+import StockProps, { StatusProps } from "../../models/StockProps";
 import { useSnackbar } from "notistack";
+import _ from "lodash";
 
 const Inventory: FC = () => {
     const theme = useTheme();
     const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
     const [stocks, setStocks] = useState<StockProps[]>([]);
+    const [status, setStatus] = useState<StatusProps | "">("ACTIVE");
     const rowGridSxProps: SxProps = {
         p: 2,
         my: 1,
@@ -24,7 +38,8 @@ const Inventory: FC = () => {
 
     const getStocks = async () => {
         try {
-            const result = await fetch(process.env.REACT_APP_API_URL + "/stocks?status=ACTIVE");
+            const result = await fetch(process.env.REACT_APP_API_URL + "/stocks?" +
+                (status === "" ? "" : "status=" + status));
             const stocks = await result.json();
 
             setStocks(stocks);
@@ -54,11 +69,41 @@ const Inventory: FC = () => {
         }
     }
 
+    const sellStock = async (id: number) => {
+        try {
+            await fetch(process.env.REACT_APP_API_URL + "/stocks/" + id, {
+                method: "PUT",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    status: "SOLD",
+                })
+            });
+
+            getStocks();
+        } catch (error: any) {
+            enqueueSnackbar(error?.data?.message || error?.message || error || "Please make sure the network is correct", {
+                variant: "error",
+            });
+        }
+    }
+
     useEffect(() => {
         getStocks();
-    }, []);
+    }, [status]);
 
     const renderStockRow = (stock: any, stockKey: number) => {
+        let statusColor = undefined;
+        switch (stock.status) {
+            case "ACTIVE":
+                statusColor = theme.palette.success.main;
+                break;
+            case "INACTIVE":
+                statusColor = theme.palette.error.main;
+                break;
+        }
         return (
             <Grid
                 key={stockKey}
@@ -68,6 +113,13 @@ const Inventory: FC = () => {
             >
                 <Grid item xs={3}>
                     {stock.sku}
+                    <Typography
+                        sx={{
+                            color: statusColor,
+                        }}
+                    >
+                        {_.startCase(stock.status.toLowerCase())}
+                    </Typography>
                 </Grid>
                 <Grid item xs={3}>
                     {stock.model}
@@ -94,6 +146,16 @@ const Inventory: FC = () => {
                             navigate("/stock/" + stock.id)
                         }}
                     >
+                        <MonetizationOnIcon />
+                    </IconButton>
+                    <IconButton aria-label="sell"
+                        sx={{
+                            color: "white"
+                        }}
+                        onClick={() => {
+                            sellStock(stock.id)
+                        }}
+                    >
                         <EditIcon />
                     </IconButton>
                     <IconButton aria-label="delete"
@@ -113,6 +175,26 @@ const Inventory: FC = () => {
 
     return (
         <Box>
+            <InputLabel id="status"
+                sx={{
+                    mb: 1,
+                }}>
+                Status
+            </InputLabel>
+            <Select
+                labelId="status"
+                value={status}
+                onChange={(event) => {
+                    setStatus(event.target.value as StatusProps);
+                }}
+                fullWidth
+                color="primary"
+            >
+                <MenuItem value="">All</MenuItem>
+                <MenuItem value="ACTIVE">Active</MenuItem>
+                <MenuItem value="SOLD">Sold</MenuItem>
+                <MenuItem value="INACTIVE">Inactive</MenuItem>
+            </Select>
             <Grid
                 container
                 alignItems="center"

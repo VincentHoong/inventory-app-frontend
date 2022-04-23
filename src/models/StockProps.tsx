@@ -1,4 +1,4 @@
-export type Status = "ACTIVE" | "INACTIVE" | "SOLD";
+export type StatusProps = "ACTIVE" | "INACTIVE" | "SOLD";
 
 export interface StockChartProps {
     date: string;
@@ -18,7 +18,7 @@ export default interface StockProps {
     model: string;
     name: string;
     price: string;
-    status: Status;
+    status: StatusProps;
     soldAt?: string;
     createdAt: string;
     updatedAt: string;
