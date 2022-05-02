@@ -184,7 +184,7 @@ const Inventory: FC = () => {
 
     const renderPagination = () => {
         return (
-            pageInfo?.totalPages &&
+            pageInfo?.totalPages > 0 &&
             <Pagination
                 count={pageInfo.totalPages}
                 color="primary"

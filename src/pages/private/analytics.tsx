@@ -77,7 +77,6 @@ const Analytics: FC = () => {
             sx={{
                 backgroundColor: theme.palette.primary.main,
                 color: "white",
-                p: 8,
             }}
         >
             <Line
